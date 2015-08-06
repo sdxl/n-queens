@@ -14,54 +14,13 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var solution = new Board({n: n});
-  var rookSetter = function(index, doNoUseArray){
-    //loop through doNotUseArray
-    //do the check (if index !== doNoUseArray)
-    //var row = solution.get(index)
-
-
+    var board = new Board({n: n});
     for(var i = 0; i < n; i++){
-      var row = solution.get(i);
-      for(var j = 0; j < n; j++){
-        row[j] = 1;
-      }
+      var row = board.get(i);
+      row[i] = 1;
     }
-  }
+    var solution = board.rows();
 
-    /*
-      var rookSetter = function(arr, doNotuseIndexarr){
-          //loop through the arr
-          //if the index is not in the doNotUseArr
-               //set the value at the position to 1
-               // add used index to doNoUseArray
-          //rookSetter(arr,doNotUseIndexArray)
-      }
-
-
-          for(var i=0; i<n; i++){
-             if(_.contains(doNotUseArray, i) === -1){
-                for(var j = 0; j < n; j++){
-                  if(_.contains(doNotuseArray, j) === -1){
-                    var row = solution.get(i);
-                    row[j] = 1;
-                    doNotUseArray.push(j);
-                  }
-                }
-             }
-             check if the nearest positions are ones?
-             rookSetter(arr, doNotUseArray);
-          }
-
-    */
-
-
-    // put the rooks in systematically
-    // after the correct # of rooks are placed
-    //   check the rows/columns
-    //   if there are no conflicts
-    //     then return the board
-  }
 
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
@@ -72,10 +31,28 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var count = 0;
+  var board = new Board({n: n});
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  var counter = function(board, rowIndex){
+    var row = board.get(rowIndex);
+    for(var i = 0; i < n; i++){
+      row[i] = 1;
+      if(!board.hasAnyRooksConflicts()){
+        if(rowIndex<(n -1)){
+          counter(board, rowIndex+1);
+        }
+      }
+      else{
+        row[i] = 0;
+      }
+    }
+      count++;
+
+  }
+  counter(board, 0);
+  console.log('Number of solutions for ' + n + ' rooks:', count);
+  return count;
 };
 
 
