@@ -34,23 +34,29 @@ window.countNRooksSolutions = function(n) {
   var count = 0;
   var board = new Board({n: n});
 
-  var counter = function(board, rowIndex){
+  var counter = function(rowIndex){
+
+    if(rowIndex === n){
+      count++;
+      return;
+    }
+
+
     var row = board.get(rowIndex);
     for(var i = 0; i < n; i++){
       row[i] = 1;
+      //board.togglePiece(row, i);
       if(!board.hasAnyRooksConflicts()){
-        if(rowIndex<(n -1)){
-          counter(board, rowIndex+1);
-        }
+          counter(rowIndex+1);
+
       }
-      else{
-        row[i] = 0;
-      }
+
+     row[i] = 0;
+
     }
-      count++;
 
   }
-  counter(board, 0);
+  counter(0);
   console.log('Number of solutions for ' + n + ' rooks:', count);
   return count;
 };
